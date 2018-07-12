@@ -5,62 +5,57 @@
   </div>
   <!-- /.box-header -->
   <!-- form start -->
-  <form class="form-horizontal">
+  <form [formGroup]="formModel" class="form-horizontal">
     <div class="box-body">
-      <div class="form-group">
+      <div class="form-group" [class.has-error]="(submitted||formModel.get('name').touched)&&formModel.get('name').invalid">
         <label for="name" class="col-sm-2 control-label">股票名称</label>
 
-        <div class="col-sm-10">
-          <input type="text" class="form-control" id="name" placeholder="股票名称">
+        <div class="col-sm-8">
+          <input formControlName="name" type="text" class="form-control" id="name" placeholder="股票名称">
+        </div>
+        <div class="col-sm-2" [class.hidden]="!(submitted||formModel.get('name').touched)">
+          <span class="help-block" [class.hidden]="!formModel.hasError('required','name')">必填</span>
+          <span class="help-block" [class.hidden]="!formModel.hasError('minlength','name')">最小长度6位</span>
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group" [class.has-error]="(submitted||formModel.get('price').touched)&&formModel.get('price').invalid">
         <label for="price" class="col-sm-2 control-label">股票价格</label>
 
-        <div class="col-sm-10">
-          <input type="number" class="form-control" id="price" placeholder="股票价格">
+        <div class="col-sm-8">
+          <input formControlName="price" type="number" class="form-control" id="price" placeholder="股票价格">
+        </div>
+        <div class="col-sm-2" [class.hidden]="!(submitted||formModel.get('price').touched)">
+          <span class="help-block" [class.hidden]="!formModel.hasError('required','price')">必填</span>
+          <span class="help-block" [class.hidden]="!formModel.hasError('min','price')">最小值为10</span>
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-2 control-label">股票星级</label>
 
-        <div class="col-sm-10">
+        <div class="col-sm-8">
           <app-stars [readonly]="false" [(rating)]="stock.rating"></app-stars>
         </div>
       </div>
       <div class="form-group">
         <label class="col-sm-2 control-label">股票描述</label>
 
-        <div class="col-sm-10">
-          <textarea class="form-control" rows="5">{{stock.desc}}</textarea>
+        <div class="col-sm-8">
+          <textarea formControlName="desc" class="form-control" rows="5"></textarea>
         </div>
       </div>
-      <div class="form-group">
+      <div class="form-group" [class.has-error]="(submitted||formModel.get('categories').dirty)&&formModel.hasError('categoriesLength','categories')">
         <label class="col-sm-2 control-label">股票类型</label>
-        <div class="col-sm-10">
-          <div class="row">
-            <div class="col-sm-1">
+        <div class="col-sm-8">
+          <div class="row" formArrayName="categories">
+            <div *ngFor="let category of categories;let i = index;" class="col-sm-1">
               <div class="checkbox">
                 <label>
-                  <input type="checkbox"> IT 1
-                </label>
-              </div>
-            </div>
-            <div class="col-sm-1">
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox"> IT 1
-                </label>
-              </div>
-            </div>
-            <div class="col-sm-1">
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox"> IT 1
+                  <input [formControlName]="i" type="checkbox">{{category}}
                 </label>
               </div>
             </div>
           </div>
+          <span class="help-block" [class.hidden]="!((submitted||formModel.get('categories').dirty)&&formModel.hasError('categoriesLength','categories'))">至少选择一种类型</span>
         </div>
       </div>
     </div>
